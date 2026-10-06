@@ -48,11 +48,32 @@
     show("start");
   }
 
-  function makeCode() {
-    const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    const buf = new Uint8Array(4);
-    (window.crypto || window.msCrypto).getRandomValues(buf);
-    return "VQ-" + Array.from(buf, (b) => alphabet[b % alphabet.length]).join("");
+  // ---------- redes da Vinteum ----------
+  // Desktop (mouse): QR codes para escanear com o celular. Celular/tablet: ícones clicáveis.
+  function renderFollow(el, title) {
+    const nets = CFG.social;
+    const desktop = VQ.isDesktop();
+    let body;
+    if (desktop) {
+      body = `<p class="follow-hint">Aponte a câmera do celular para um QR code.</p>
+        <div class="follow-qrs">${nets
+          .map(
+            (n) => `<a class="qr-card" href="${n.url}" target="_blank" rel="noopener">
+              <span class="qr">${VQ.qrSvg(n.url)}</span>
+              <span class="qr-cap">${VQ.icon(n.key, 18)}<span>${n.label}</span></span>
+            </a>`
+          )
+          .join("")}</div>`;
+    } else {
+      body = `<div class="follow-icons">${nets
+        .map(
+          (n) => `<a class="social-btn" href="${n.url}" target="_blank" rel="noopener" aria-label="${n.label}">
+            <span class="ico">${VQ.icon(n.key, 26)}</span><span class="lbl">${n.label}</span>
+          </a>`
+        )
+        .join("")}</div>`;
+    }
+    el.innerHTML = `<p class="follow-title">${title}</p>${body}`;
   }
 
   // ---------- dificuldade ----------
@@ -190,33 +211,60 @@
   }
   function stopClock() { clearInterval(clockTimer); clockTimer = null; }
 
-  function finish() {
+  // mode: "win" (acertou) | "lose" (errou: escolhe caneta ou nova tentativa) | "pen" (ficou com a caneta)
+  function showResult(mode) {
     const lv = CFG.levels[state.level];
+    const pen = CFG.participationPrize;
     const total = state.qs.length;
-    const win = state.score >= lv.need;
+    const ok = mode !== "lose";
 
+    stopClock();
     show("result");
-    $("#r-score").textContent = total === 1 ? (win ? "✓" : "✗") : `${state.score}/${total}`;
-    $("#r-ring").className = "ring" + (win ? "" : " lose");
-    $("#r-ring").style.setProperty("--c", win ? LEVEL_COLORS[state.level] : "#f2ae0a");
+
+    $("#r-score").textContent = total === 1 ? (ok ? "✓" : "✗") : `${state.score}/${total}`;
+    $("#r-ring").className = "ring" + (mode === "win" ? "" : " lose");
+    $("#r-ring").style.setProperty("--c", mode === "win" ? LEVEL_COLORS[state.level] : "#f2ae0a");
 
     const voucher = $("#r-voucher");
-    stopClock();
+    const bonus = $("#r-bonus");
+    const follow = $("#r-follow");
 
-    if (win) {
-      $("#r-title").textContent = total === 1 ? "Acertou! 🎉" : state.score === total ? "Perfeito! 🎉" : "Mandou bem! 🎉";
-      $("#r-sub").textContent = total === 1 ? `Você mandou bem no nível ${lv.label}.` : `Você acertou ${state.score} de ${total} no nível ${lv.label}.`;
+    if (mode === "win") {
+      $("#r-title").textContent = total === 1 ? "Acertou! 🎉" : "Mandou bem! 🎉";
+      $("#r-sub").textContent = `Você mandou bem no nível ${lv.label}.`;
       $("#r-prize").textContent = lv.prize;
-      $("#r-code").textContent = makeCode();
-      $("#r-time").textContent = fmtNow();
-      clockTimer = setInterval(() => ($("#r-time").textContent = fmtNow()), 1000);
-      voucher.hidden = false;
-      confetti();
+      bonus.textContent = `+ ${pen}, se você seguir a Vinteum`;
+      bonus.hidden = false;
+    } else if (mode === "pen") {
+      $("#r-title").textContent = "Combinado! 🖊️";
+      $("#r-sub").textContent = "Siga a Vinteum e mostre para a equipe para pegar sua caneta.";
+      $("#r-prize").textContent = pen;
+      bonus.hidden = true;
     } else {
-      $("#r-title").textContent = total === 1 ? "Não foi dessa vez" : "Quase lá!";
-      $("#r-sub").textContent = total === 1 ? "Mas quem sabe na próxima! Fale com a equipe no stand para tentar de novo." : `Você acertou ${state.score} de ${total}. Eram necessários ${lv.need} para ganhar o brinde.`;
-      voucher.hidden = true;
+      $("#r-title").textContent = "Não foi dessa vez";
+      $("#r-sub").textContent = `Você pode ficar só com a ${pen.toLowerCase()} ou tentar de novo.`;
     }
+
+    const hasPrize = mode !== "lose";
+    voucher.hidden = !hasPrize;
+    follow.hidden = !hasPrize;
+    if (hasPrize) {
+      const tick = () => ($("#r-time").textContent = fmtNow());
+      tick();
+      clockTimer = setInterval(tick, 1000);
+      renderFollow($("#follow-result"), mode === "win" ? `Siga a Vinteum e leve também uma ${pen.toLowerCase()}` : "Siga a Vinteum");
+    }
+    if (mode === "win") confetti();
+
+    $("#btn-retry").hidden = mode !== "lose";
+    $("#btn-pen").hidden = mode !== "lose";
+    $("#btn-pen").textContent = `Ficar com a ${pen.toLowerCase()}`;
+    $("#btn-home").hidden = mode === "lose";
+  }
+
+  function finish() {
+    const lv = CFG.levels[state.level];
+    showResult(state.score >= lv.need ? "win" : "lose");
   }
 
   // ---------- confete ----------
@@ -265,6 +313,12 @@
   $("#btn-back-start").addEventListener("click", () => show("start"));
   $("#btn-next").addEventListener("click", next);
   $("#btn-home").addEventListener("click", goHome);
+  $("#btn-retry").addEventListener("click", () => {
+    stopClock();
+    show("level");
+  });
+  $("#btn-pen").addEventListener("click", () => showResult("pen"));
+  renderFollow($("#follow-start"), `Participe e leve uma ${CFG.participationPrize.toLowerCase()}: siga a Vinteum`);
   ["pointerdown", "keydown", "touchstart"].forEach((ev) => document.addEventListener(ev, resetIdle, { passive: true }));
 
   // PWA / uso offline (wifi de evento costuma falhar)

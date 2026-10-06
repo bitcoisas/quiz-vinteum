@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06110e">
+  <title>Stand Vinteum · QR codes</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app stand">
+    <header class="top">
+      <a class="brand" href="https://vinteum.org" target="_blank" rel="noopener" aria-label="Vinteum">
+        <img src="assets/icon.svg" alt="" width="34" height="31">
+        <span class="wordmark">vinteum</span>
+      </a>
+      <span class="chip" id="event-name"></span>
+    </header>
+
+    <main>
+      <section class="stand-hero">
+        <p class="eyebrow">Stand Vinteum</p>
+        <h1>Escaneie com a câmera do <span class="grad">celular</span></h1>
+        <p class="lead">Jogue o quiz, entre na comunidade e conheça a Vinteum.</p>
+      </section>
+
+      <section class="stand-grid">
+        <article class="stand-card main">
+          <div class="qr-box" id="qr-quiz"></div>
+          <h2>Jogue o quiz</h2>
+          <p class="sub">Acerte e ganhe um brinde</p>
+          <p class="url" id="url-quiz"></p>
+        </article>
+        <article class="stand-card">
+          <div class="qr-box" id="qr-discord"></div>
+          <h2>Entre no Discord</h2>
+          <p class="sub">Comunidade de devs Bitcoin</p>
+          <p class="url" id="url-discord"></p>
+        </article>
+        <article class="stand-card">
+          <div class="qr-box" id="qr-site"></div>
+          <h2>Conheça a Vinteum</h2>
+          <p class="sub">Pesquisa e desenvolvimento Bitcoin</p>
+          <p class="url" id="url-site"></p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="vendor/qrcode.js"></script>
+  <script src="shared.js"></script>
+  <script src="config.js"></script>
+  <script src="stand.js"></script>
+</body>
+</html>

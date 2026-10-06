@@ -28,11 +28,9 @@
       <section id="screen-start" class="screen">
         <p class="eyebrow">Quiz Bitcoin</p>
         <h1>Quanto você sabe sobre <span class="grad">Bitcoin?</span></h1>
-        <p class="lead">Escolha a dificuldade, acerte as perguntas e leve um brinde da Vinteum.</p>
+        <p class="lead">Escolha a dificuldade, acerte a pergunta e leve um brinde da Vinteum.</p>
         <button class="btn primary big" id="btn-play">Jogar</button>
-        <ul class="gifts" aria-label="Brindes">
-          <li>Canetas</li><li>Chaveiros</li><li>Cadernetas</li><li>Livros</li>
-        </ul>
+        <div class="follow-card"><div id="follow-start"></div></div>
       </section>
 
       <!-- DIFICULDADE -->
@@ -67,13 +65,17 @@
         <div class="voucher" id="r-voucher" hidden>
           <p class="voucher-label">Seu brinde</p>
           <p class="voucher-prize" id="r-prize"></p>
-          <p class="voucher-code" id="r-code"></p>
+          <p class="voucher-bonus" id="r-bonus" hidden></p>
           <p class="voucher-time" id="r-time"></p>
           <p class="voucher-note">Mostre esta tela para a equipe da Vinteum no stand.</p>
         </div>
 
+        <div class="follow-card" id="r-follow" hidden><div id="follow-result"></div></div>
+
         <div class="actions">
-          <button class="btn primary" id="btn-home">Voltar ao início</button>
+          <button class="btn primary" id="btn-retry" hidden>Tentar novamente</button>
+          <button class="btn ghost" id="btn-pen" hidden>Ficar com a caneta</button>
+          <button class="btn primary" id="btn-home" hidden>Voltar ao início</button>
         </div>
       </section>
     </main>
@@ -85,6 +87,8 @@
     </footer>
   </div>
 
+  <script src="vendor/qrcode.js"></script>
+  <script src="shared.js"></script>
   <script src="config.js"></script>
   <script src="questions.js"></script>
   <script src="app.js"></script>

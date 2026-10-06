@@ -11,19 +11,33 @@ window.QUIZ_CONFIG = {
   // Nome do evento exibido no topo
   eventName: "SECOMP · UFSCar",
 
+  // Brinde de quem participa e segue a Vinteum (também é a opção de quem erra)
+  participationPrize: "Caneta",
+
+  // Redes da Vinteum (links usados nos QR codes e nos ícones)
+  social: [
+    { key: "instagram", label: "Instagram", handle: "@vinteum_org", url: "https://instagram.com/vinteum_org" },
+    { key: "x", label: "X", handle: "@vinteum_org", url: "https://x.com/vinteum_org" },
+    { key: "linkedin", label: "LinkedIn", handle: "Vinteum", url: "https://www.linkedin.com/company/vinteum-org/" },
+  ],
+  links: {
+    discord: "https://discord.gg/vinteum",
+    site: "https://vinteum.org",
+  },
+
   // Dificuldades: "need" = acertos necessários para ganhar o brinde
   levels: {
     easy: {
       label: "Fácil",
       tagline: "Curiosidades e o básico do Bitcoin",
       need: 1,
-      prize: "Caneta ou chaveiro",
+      prize: "Caderneta",
     },
     medium: {
       label: "Médio",
       tagline: "Como a rede funciona por dentro",
       need: 1,
-      prize: "Caderneta",
+      prize: "Chaveiro",
     },
     hard: {
       label: "Difícil",

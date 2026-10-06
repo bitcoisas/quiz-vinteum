@@ -1,4 +1,4 @@
-const CACHE = "quiz-vinteum-v2";
+const CACHE = "quiz-vinteum-v3";
 const ASSETS = [
   "./",
   "index.html",
@@ -7,6 +7,10 @@ const ASSETS = [
   "config.js",
   "questions.js",
   "manifest.webmanifest",
+  "stand.html",
+  "stand.js",
+  "shared.js",
+  "vendor/qrcode.js",
   "assets/icon.svg",
   "assets/icon-192.png",
   "assets/icon-512.png",
