@@ -1,4 +1,4 @@
-const CACHE = "quiz-vinteum-v3";
+const CACHE = "quiz-vinteum-v5";
 const ASSETS = [
   "./",
   "index.html",
@@ -29,20 +29,35 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Stale-while-revalidate: abre rápido/offline e atualiza em segundo plano
+// Rede primeiro: sempre pega a versão mais nova quando há internet (evita arquivos misturados
+// de versões diferentes). Se a rede falhar ou demorar mais de 4s, usa o que está guardado.
+function fromCache(req) {
+  return caches.match(req, { ignoreSearch: true }).then((hit) => hit || (req.mode === "navigate" ? caches.match("index.html") : null));
+}
+
+function networkFirst(req) {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (res) => { if (!done && res) { done = true; resolve(res); } };
+    const timer = setTimeout(() => fromCache(req).then(finish), 4000);
+    fetch(req, { cache: "no-cache" })
+      .then((res) => {
+        clearTimeout(timer);
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        finish(res);
+      })
+      .catch(() => {
+        clearTimeout(timer);
+        fromCache(req).then((hit) => finish(hit || Response.error()));
+      });
+  });
+}
+
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
-  e.respondWith(
-    caches.open(CACHE).then(async (cache) => {
-      const cached = await cache.match(req);
-      const net = fetch(req)
-        .then((res) => {
-          if (res.ok) cache.put(req, res.clone());
-          return res;
-        })
-        .catch(() => cached);
-      return cached || net;
-    })
-  );
+  e.respondWith(networkFirst(req));
 });

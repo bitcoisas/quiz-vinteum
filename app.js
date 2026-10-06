@@ -52,7 +52,8 @@
   // Desktop (mouse): QR codes para escanear com o celular. Celular/tablet: ícones clicáveis.
   function renderFollow(el, title) {
     const nets = CFG.social;
-    const desktop = VQ.isDesktop();
+    // se a biblioteca de QR não carregar, cai para os ícones em vez de quebrar o quiz
+    const desktop = VQ.isDesktop() && typeof qrcode === "function";
     let body;
     if (desktop) {
       body = `<p class="follow-hint">Aponte a câmera do celular para um QR code.</p>
