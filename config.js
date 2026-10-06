@@ -31,13 +31,13 @@ window.QUIZ_CONFIG = {
       label: "Fácil",
       tagline: "Curiosidades e o básico do Bitcoin",
       need: 1,
-      prize: "Caderneta",
+      prize: "Chaveiro",
     },
     medium: {
       label: "Médio",
       tagline: "Como a rede funciona por dentro",
       need: 1,
-      prize: "Chaveiro",
+      prize: "Caderneta",
     },
     hard: {
       label: "Difícil",
