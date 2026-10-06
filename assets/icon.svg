@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 395 364" role="img" aria-label="Vinteum">
+  <defs>
+    <linearGradient id="vg" x1="40" y1="0" x2="360" y2="364" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3CAE66"/>
+      <stop offset="1" stop-color="#009086"/>
+    </linearGradient>
+    <linearGradient id="vy" x1="0" y1="0" x2="0" y2="262" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F2AE0A"/>
+      <stop offset="1" stop-color="#8AAE40"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#vg)" d="M0 0H212V262H395V364H110V102H0Z"/>
+  <path fill="url(#vy)" d="M261 0H395V262H294V100H261Z"/>
+</svg>
